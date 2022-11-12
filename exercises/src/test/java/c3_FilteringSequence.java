@@ -3,6 +3,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.function.Function;
+
 /**
  * Sequence may produce many elements, but we are not always interested in all of them. In this chapter we will learn
  * how to filter elements from a sequence.
@@ -22,13 +24,13 @@ import reactor.test.StepVerifier;
 public class c3_FilteringSequence extends FilteringSequenceBase {
 
     /**
-     * Collect most popular girl names, no longer then 4 characters.
+     * Collect most popular girl names, no longer than 4 characters.
      */
     @Test
     public void girls_are_made_of_sugar_and_spice() {
         Flux<String> shortListed = popular_girl_names_service()
                 //todo: change this line only
-                ;
+                .filter(n -> n.length() <= 4);
 
         StepVerifier.create(shortListed)
                     .expectNext("Emma", "Ava", "Mia", "Luna", "Ella")
@@ -43,7 +45,8 @@ public class c3_FilteringSequence extends FilteringSequenceBase {
     public void needle_in_a_haystack() {
         Flux<Object> strings = mashed_data_service()
                 //todo: change this line only
-                ;
+                .ofType(String.class)
+                .map(Function.identity());
 
         StepVerifier.create(strings)
                     .expectNext("1", "String.class")
@@ -57,7 +60,7 @@ public class c3_FilteringSequence extends FilteringSequenceBase {
     public void economical() {
         Flux<String> items = duplicated_records_service()
                 //todo: change this line only, use only one operator
-                ;
+                .distinct();
 
         StepVerifier.create(items)
                     .expectNext("1", "2", "3", "4", "5")
